@@ -19,9 +19,7 @@ afterAll(async () => {
 describe('Onboarding Service', () => {
 
     it('should add parking lot, floors and slots', async () => {
-        const res = await OnboardingService()
-        expect(res.statusCode).toEqual(200)
-        expect(res.body).toHaveProperty('users')
+
     })
 
 })

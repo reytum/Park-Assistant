@@ -14,8 +14,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AllotmentDal = void 0;
 const ApiError_1 = require("../../api/models/errors/ApiError");
-const config_1 = __importDefault(require("../config"));
 const ParkingSlot_1 = __importDefault(require("../entities/ParkingSlot"));
+const config_1 = __importDefault(require("../config"));
 class AllotmentDal {
     constructor() {
         this.findFirstEmptySlot = (lotId, size) => __awaiter(this, void 0, void 0, function* () {

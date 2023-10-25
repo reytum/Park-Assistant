@@ -1,13 +1,13 @@
 import { Sequelize } from "sequelize"
 import { ApiError } from "../../api/models/errors/ApiError"
 import ParkingSlot from "../entities/ParkingSlot"
+import sequelizeConnection from "../config"
 
 export class AllotmentDal {
-    constructor(private readonly sequelize: Sequelize) { }
 
     findFirstEmptySlot = async (lotId: number, size: number): Promise<any> => {
         //Need to use ORM here, but due to time constraint wrote a query directly
-        let slot = await this.sequelize.query(`
+        let slot = await sequelizeConnection.query(`
             SELECT ps.id as "slotId", "FloorId" as "floorId", f.name as "floorName", ps.name as "slotName", f.level as "level"
             FROM "ParkingSlots" ps 
             JOIN "Floors" f 
@@ -31,9 +31,9 @@ export class AllotmentDal {
 
     allotSlot = async (lotId: number, size: number, verhicleNumber: string): Promise<AllotmentResponse> => {
         try {
-            const result = await this.sequelize.transaction(async (t) => {
+            const result = await sequelizeConnection.transaction(async (t) => {
                 //Need to use ORM here, but due to time constraint wrote a query directly
-                let slot = await this.sequelize.query(`
+                let slot = await sequelizeConnection.query(`
             SELECT ps.id as "slotId", "FloorId" as "floorId", f.name as "floorName", ps.name as "slotName", f.level as "level"
             FROM "ParkingSlots" ps 
             JOIN "Floors" f 

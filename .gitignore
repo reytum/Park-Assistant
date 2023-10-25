@@ -1,0 +1,10 @@
+# Dependency directories
+pa-server/node_modules/
+pa-server/.npm
+pa-server/.env
+
+#Flutter
+park_assistance/.android
+park_assistance/.ios
+park_assistance/.idea
+park_assistance/.dart_tool

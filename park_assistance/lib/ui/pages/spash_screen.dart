@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:park_assistance/bloc/login_provider.dart';
 import 'package:park_assistance/ui/pages/login_page.dart';
 import 'package:park_assistance/ui/pages/selection_page.dart';
-import 'package:park_assistance/ui/pages/slot_allotment_page.dart';
 import 'package:provider/provider.dart';
 
 class SplashScreen extends StatelessWidget {

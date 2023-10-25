@@ -1,9 +1,9 @@
-import { where } from "sequelize";
 import ParkingLot from "../entities/ParkingLot";
 import Floor from "../entities/Floor";
 import ParkingSlot from "../entities/ParkingSlot";
 
 export class OnBoardingDal {
+
     addParkingLot = async (request: ParkingLot): Promise<ParkingLot> => {
         let parkingLot = await ParkingLot.create<ParkingLot>(request.toJSON())
         return parkingLot

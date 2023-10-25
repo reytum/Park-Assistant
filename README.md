@@ -1,14 +1,14 @@
-#Prequesite
+# Prequesite
 Below operations need to be perfomed before running the app.
 
-##Node installation
+## Node installation
 Make sure you have node installed on your system.
 Refer this documentation for setting up node: https://nodejs.org/en/download
 
 Once node is installed, navigate to pa-server directory and run:
 ```npm install```
 
-##Postgres Installation
+## Postgres Installation
 We would be using postgres for this app as our data store. 
 So we need to install postgres on the machine.
 
@@ -18,14 +18,14 @@ MacOS:
 Linux:
 ``````sudo apt install postgresql``````
 
-##Database Setup (Mac)
+## Database Setup (Mac)
 To start the DB, run the below command:
 ```brew services start postgresql```
 
 To stop the DB, run the below command:
 ```brew services stop postgresql```
 
-###Configure the DB
+### Configure the DB
 Open the Query terminal by running the below command:
 ```psql postgres```
 
@@ -48,7 +48,7 @@ CREATE DATABASE park_assistant_db WITH OWNER = admin;
 GRANT ALL PRIVILEGES ON DATABASE park_assistant_db TO admin;
 ```
 
-###Commands to verify the process
+### Commands to verify the process
  List all users:
  ```\du```
 
@@ -65,17 +65,17 @@ GRANT ALL PRIVILEGES ON DATABASE park_assistant_db TO admin;
  ```\q```
 
 
-#Running the Project
-##Prerequesite
+# Running the Project
+## Prerequesite
 The Assumption is made that Node, Postgres and Flutter is already installed on the system.
 
-##Backend
+## Backend
 1) Navigate to the ```pa-server``` directory and run ```npm install```
 2) Run the server: ```npm run start```
 3) Onboard a Parking Lot using below API from Postman:
    POST -> http://localhost:3000/api/onboarding/
    Body -> 
-   ```json
+```json
    {
   "name": "Pacific Mall",
   "cityName": "Dehradun",
@@ -113,11 +113,11 @@ The Assumption is made that Node, Postgres and Flutter is already installed on t
   ],
   "registrationId": 4 //This is assumed to be unique for a Parking Lot. It can be the emailId, phone number, registrationId etc of the Parking Lot.
 }
-   ```
+```
 
-   The mobile app will need the registrationId to login to a ParkingLot.
+ The mobile app will need the registrationId to login to a ParkingLot.
 
- #Mobile App
+ ## Mobile App
  Navigate to ```park_assistance``` and run ```flutter pub get```.
  The app needs to run in debug mode on chrome due to localhost. 
  Running the app in web:
@@ -128,8 +128,8 @@ The Assumption is made that Node, Postgres and Flutter is already installed on t
 The app can also be run on Android emulator. 
 To do so we need to change the `baseUrl` in `BaseApiRepository` class from ```"http://localhost:3000/api";``` to ```"http://10.0.2.2:3000/api";```
 
-#Requirement Traceability Matrix
-##Backend
+# Requirement Traceability Matrix
+## Backend
 Packages used:
 1) express -> Framework for node apps
 2) sequelize -> ORM for RDBMS. We are using Postgres
@@ -144,7 +144,7 @@ There are two Api Services created:
 1) Onboarding -> To Register a new ParkingLot
 2) Allot/Release Slot -> To Allot or release a Parking Slot
 
-##Database structure
+## Database structure
 Three tables are created for:
 1) Parking Lot -> ParkingLots
 2) Floor -> Floors
@@ -161,7 +161,7 @@ Three tables are created for:
 The vehicleNumber is a string field which is NULL by default. It can have the vehicle number of the parked vehicle. 
 For now we are just updating it to "1" if the slot is booked, and NULL to release the slot.
 
-###Onboarding (POST)
+### Onboarding (POST)
 The onboarding API call can only be done from Postman. Its not integrated right now with the App.
 The body takes below fields:
 ```json
@@ -210,7 +210,7 @@ The slots are generated based on the above count.
 slotName -> floorName+Size(S, M, L, X)+index(1, 2, 3)
 For e.g the 5th Medium Slot on the B Floor will be named as -> BM5
 
-###Get Parking Slot (GET)
+### Get Parking Slot (GET)
 The API endpoint is:
 ```
 http://localhost:3000/api/onboarding/<registrationId>
@@ -237,7 +237,7 @@ If No Parking Lot is found with the given registrationId, below response is retu
  No Parking lot found by given registrationId
 ```
 
-###Alottment (POST)
+### Alottment (POST)
 The below Endpoint is called:
 ```
 http://localhost:3000/api/getslot/<Parking-Lot-Id>/<size>
@@ -266,7 +266,7 @@ In case no slot is found, the below error is returned to the user with 500 code:
 Sorry! All slots are full
 ```
 
-###Release (POST)
+### Release (POST)
 The below endpoint is called:
 ```
 http://localhost:3000/api/releaseslot/<Parking-Lot-Id>/<Slot-Id>
@@ -283,7 +283,7 @@ The below response is returned:
 }
 ```
 
-##Front-End
+## Front-End
 The front end is built in flutter.
 Libraries used:
 1) Dio -> Network
@@ -295,7 +295,13 @@ UI -> Provider -> Repository -> BaseApiProvider
 
 Pages: SplashScreen -> LoginPage || SelectionPage -> SelectionPage -> AllotmentPage || ReleasePage || LogingPage(From logout option)
 
-#Atomicity
+![login](https://github.com/reytum/Park-Assistant/blob/main/images/login.png)
+![select](https://github.com/reytum/Park-Assistant/blob/main/images/select.png)
+![allot](https://github.com/reytum/Park-Assistant/blob/main/images/allot.png)
+![allot_err](https://github.com/reytum/Park-Assistant/blob/main/images/allot_error.png)
+![release](https://github.com/reytum/Park-Assistant/blob/main/images/release.png)
+
+# Atomicity
 The DB used is postgres, so the Atomicity is maintained. 
 While booking a slot, we are running 2 quering:
 1) Get a slot where the vehicleNumber is null sorted by size ASC, where size >= requiredSize LIMIT 1
@@ -304,14 +310,14 @@ While booking a slot, we are running 2 quering:
 The above two queries are running in a single transaction, so its either all done or complete rollback.
 We are ensured that a single slot is not allocated to multiple vehicles.
 
-#Scaling the application
+# Scaling the application
 Due to time restrictions and system boundations, I was not able to setup docker.
 Usually the DB setup and deployment would happen from the Docker file.
 Here we are just running the app in a single container.
 
-Once the application grows, we will monitor the application server spikes and database server spikes.
-The database server will need to grow vertically.
-The application server can be scaled horizontally.
+Once the application grows, we will monitor the application server spikes and database connection spikes.
+The database server will be scaled vertically.
+The application server will be scaled horizontally.
 
 To scale the server horizontally, we would need a load balancer to ditribute our requests accross multiple instances.
 We would be using PM2 for our node application.
@@ -326,18 +332,28 @@ pm2 start app.ts -i 2
 ```
 2 in the above command means we would be distributing the load into 2 instances.
 
-#Logging and Tracing a call
+# Logging and Tracing a call
 For Mobile app we can use firebase performance sdk for tracing API metrics and the widget build times and firebase crashlytics to log catched errors which are veri helpfull in identify prod issues. We can log into sentry as well.
 
 For server app, we can use kibana to log the requests.
 
-##Tracing
+## Tracing
 To trace the API calls, we can use a header x-tracker in all the API requests. The x-tracker can be generated from the clients using a uuid generator and sent into all the API calls. This tracker would be helpfull to trace the API call in kibana logs and identify what happened with the request if anything unsual happens.
+We can integrate New Relic to see the metrics on how the server is performing.
 
-#Test coverage
+# Test coverage
 Due to time constraint, I have added only few test cases in the app as well as the server just to display how we can write the tests.
 
-#Few cases not handled
+Frameworks Used
+## Node
+1) jest
+2) faker
+
+## Flutter
+1) mockito
+2) test
+
+# Few cases not handled
 Few of the edge cases have not been handled in the server due to time constraint. The comments are addeed for the same
 1) Validations -> Only null check are added as of now, we need to add more precise validations to errors are precise.
 2) In Allotment, to join the tables and get the first empty slot, I have used raw query, will have to use ORM to do this. 
@@ -345,6 +361,8 @@ Few of the edge cases have not been handled in the server due to time constraint
 4) Proper errors are not thrown right now, generic error messages and codes are thrown.
 5) Test coverage report is not 100 percent.
 6) Docker file not added to set ENV variables for database config. 
+7) DI not used in app along with MVVM and Clean architecture.
+
 
 
 

@@ -349,7 +349,7 @@ Frameworks Used
 1) jest
 2) ts-mockito
 
-###Run the tests
+### Run the tests
 To run the tests, we need to enable in-memory database in our sequelizeConnection.
 Open the file ```src/database/config.ts``` and uncomment the below line:
 ```

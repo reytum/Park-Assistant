@@ -3,14 +3,16 @@ import { AllotmentController } from "../controllers/AllotmentController"
 import { AllotmentService } from "../services/AllotmentService"
 import { AllotmentDal } from "../../database/dal/AllotmentDal"
 import { AllotmentValidator } from "../middlewares/validations/AllotmentValidator"
+import { SlotCache } from "../../database/SlotCache"
 
 export class AllotmentRoute {
+
     //Normally we should inject these dependencies
     //for simplicity using like this
-    private readonly allotmentController: AllotmentController = new AllotmentController(new AllotmentService(new AllotmentDal))
+    private readonly allotmentController: AllotmentController = new AllotmentController(new AllotmentService(this.slotCache))
     private readonly allotmentValidator: AllotmentValidator = new AllotmentValidator()
 
-    constructor(private readonly router: Router) {
+    constructor(private readonly router: Router, private readonly slotCache: SlotCache) {
     }
 
     routes(): Router {

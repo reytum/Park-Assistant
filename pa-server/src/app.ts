@@ -3,6 +3,8 @@ import { OnboardingRoute } from './api/routes/OnboardingRoute'
 import { AllotmentRoute } from './api/routes/AllotmentRoute';
 import { Logger } from './api/middlewares/Logger'
 import sequelizeConnection from './database/config';
+import { SlotCache } from './database/SlotCache';
+import { AllotmentDal } from './database/dal/AllotmentDal';
 //import { AllotmentRoute } from './api/routes/AllotmentRoute'
 
 const app = express();
@@ -18,6 +20,7 @@ app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
 });
+let slotCache = new SlotCache(new AllotmentDal())
 app.use('/api', router)
 
 //router.use('/onboarding', router)
@@ -27,8 +30,8 @@ app.get('/', (req, res) => {
 
 app.set('sequelizeClient', sequelizeConnection)
 
-router.use('/onboarding', new OnboardingRoute(router).routes())
-router.use('/', new AllotmentRoute(router).routes())
+router.use('/onboarding', new OnboardingRoute(router, slotCache).routes())
+router.use('/', new AllotmentRoute(router, slotCache).routes())
 
 const start = async (): Promise<void> => {
   try {

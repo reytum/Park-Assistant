@@ -1,28 +1,31 @@
-import { AllotmentDal } from "../../database/dal/AllotmentDal"
 import { ApiError } from "../models/errors/ApiError"
+import { SlotCache } from "../../database/SlotCache";
 
 export class AllotmentService {
+
+
     constructor(
-        private readonly allotmentDal: AllotmentDal
+        private readonly slotCache: SlotCache
     ) { }
 
     allotSlot = async (lotId: number, size: number): Promise<AllotmentResponse> => {
         try {
-            let slot = await this.allotmentDal.allotSlot(lotId, size, "1")
+            let slot = this.slotCache.getSlot(lotId, size)
             if (slot != null) {
                 return slot
             }
-            throw new ApiError(500, "Sorry! All slots are full");
+            throw new ApiError(404, "Sorry! All slots are full");
         } catch (err) {
             throw err;
         }
     }
 
     releaseSlot = async (lotId: number, slotId: number): Promise<ReleaseResponse> => {
-        let response = await this.allotmentDal.updateSlotRemoveVehicleNumber(slotId)
-        if (response > 0) {
-            return { message: "The slot is released" } as ReleaseResponse
-        }
-        return { message: "The slot was not occupied" } as ReleaseResponse
+        let response = await this.slotCache.releaseSlot(lotId, slotId)
+        return response
     }
+}
+
+function HashMap<T, U>(): any {
+    throw new Error("Function not implemented.");
 }

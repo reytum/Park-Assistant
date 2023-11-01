@@ -1,3 +1,4 @@
+import { SlotCache } from "../../database/SlotCache";
 import { OnBoardingDal } from "../../database/dal/OnBoardingDal";
 import ParkingLot from "../../database/entities/ParkingLot";
 import { ObjectMapper } from "../../utils/ObjectMapper";
@@ -5,7 +6,8 @@ import { ApiError } from "../models/errors/ApiError";
 
 export class OnboardingService {
     constructor(
-        private readonly onboardingDal: OnBoardingDal
+        private readonly onboardingDal: OnBoardingDal,
+        private readonly slotCache: SlotCache
     ) { }
 
     onboardParkingLot = async (obRequest: OnboardingRequest): Promise<OnboardingResponse> => {
@@ -28,6 +30,7 @@ export class OnboardingService {
     getParkingLotByRegistrationId = async (id: string): Promise<ParkingLot> => {
         let parkingLot = await this.onboardingDal.getParkingLotById(id)
         if (parkingLot) {
+            await this.slotCache.populateCache(parkingLot.id)
             return parkingLot
         }
         throw new ApiError(404, "No Parking lot found by given registrationId")

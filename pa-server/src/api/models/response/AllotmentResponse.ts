@@ -5,6 +5,7 @@ interface AllotmentResponse {
     slotName: string | null;
     level: number
     slot: string | null;
+    slotSize: number;
 }
 
 interface ReleaseResponse {

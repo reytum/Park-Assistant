@@ -1,10 +1,11 @@
 import 'package:flutter/cupertino.dart';
+import 'package:park_assistance/network/base_api_provider.dart';
 import 'package:park_assistance/network/repositories/slot_repository.dart';
 import 'package:park_assistance/utils/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SlotAllotmentProvider extends ChangeNotifier {
-  final SlotRepository _slotRepository = SlotRepository();
+  final SlotRepository _slotRepository = SlotRepository(BaseApiProvider());
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   String messageHeader = "";
   String messageBody = "";

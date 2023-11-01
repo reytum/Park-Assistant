@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:park_assistance/network/base_api_provider.dart';
 import 'package:park_assistance/network/repositories/login_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -6,7 +7,7 @@ import '../utils/constants.dart';
 
 class LoginProvider extends ChangeNotifier {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-  final LoginRepository _loginRepository = LoginRepository();
+  final LoginRepository _loginRepository = LoginRepository(BaseApiProvider());
   bool? isLoggedIn;
   int? parkingLotId = -1;
   String errorText = "";

@@ -8,8 +8,9 @@ export class AllotmentService {
 
     allotSlot = async (lotId: number, size: number): Promise<AllotmentResponse> => {
         try {
-            let slot = this.slotCache.getSlot(lotId, size)
+            let slot = await this.slotCache.getSlot(lotId, size)
             if (slot != null) {
+                slot.slot = `${slot.floorId}-${slot.slotId}`
                 return slot
             }
             throw new ApiError(404, "Sorry! All slots are full");

@@ -364,11 +364,20 @@ npm run test
 
 Below is the coverage report for the same:
 
-![login](https://github.com/reytum/Park-Assistant/blob/main/images/node-test.png)
+![node-test-report](https://github.com/reytum/Park-Assistant/blob/main/images/node-test.png)
 
 ## Flutter
 1) mockito
 2) test
+
+To run the flutter tests, use the below command:
+```
+flutter test --coverage
+```
+
+Below is the coverage report for the same:
+
+![flutter-test-report](https://github.com/reytum/Park-Assistant/blob/main/images/flutter-test.png)
 
 # Few cases not handled
 Few of the edge cases have not been handled in the server due to time constraint. The comments are addeed for the same

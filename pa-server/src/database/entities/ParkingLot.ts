@@ -12,7 +12,7 @@ class ParkingLot extends Model<InferAttributes<ParkingLot>, InferCreationAttribu
     declare type: string;
     declare latitude: number;
     declare longitude: number;
-    declare countryCode: number;
+    declare countryCode: string;
     declare registrationId: string;
     declare createdAt: CreationOptional<Date>;
     declare updatedAt: CreationOptional<Date>;

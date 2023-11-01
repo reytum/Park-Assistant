@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.OnboardingService = void 0;
 const ObjectMapper_1 = require("../../utils/ObjectMapper");
 const ApiError_1 = require("../models/errors/ApiError");
+const sequelize_1 = require("sequelize");
 class OnboardingService {
     constructor(onboardingDal, slotCache) {
         this.onboardingDal = onboardingDal;
@@ -19,18 +20,28 @@ class OnboardingService {
         this.onboardParkingLot = (obRequest) => __awaiter(this, void 0, void 0, function* () {
             //Normally these queries would be under a single transaction
             //But due to time constraints using brute force here
-            let parkingLot = yield this.onboardingDal.addParkingLot(ObjectMapper_1.ObjectMapper.obRequestToLotEntity(obRequest));
-            if (parkingLot) {
-                let floors = yield this.onboardingDal.bulkCreateFloors(ObjectMapper_1.ObjectMapper.obRequestToFloorEntity(parkingLot.id, obRequest));
-                if (floors) {
-                    let slots = yield this.onboardingDal.bulkCreateSlots(ObjectMapper_1.ObjectMapper.obRequestToSlotEntity(floors, obRequest));
+            try {
+                let parkingLot = yield this.onboardingDal.addParkingLot(ObjectMapper_1.ObjectMapper.obRequestToLotEntity(obRequest));
+                if (parkingLot) {
+                    let floors = yield this.onboardingDal.bulkCreateFloors(ObjectMapper_1.ObjectMapper.obRequestToFloorEntity(parkingLot.id, obRequest));
+                    if (floors) {
+                        let slots = yield this.onboardingDal.bulkCreateSlots(ObjectMapper_1.ObjectMapper.obRequestToSlotEntity(floors, obRequest));
+                    }
+                }
+                let response = {
+                    id: parkingLot.id,
+                    name: parkingLot.name
+                };
+                return response;
+            }
+            catch (err) {
+                if (err instanceof sequelize_1.UniqueConstraintError) {
+                    throw new ApiError_1.ApiError(500, "ParkingLot already exists for the registrationId");
+                }
+                else {
+                    throw err;
                 }
             }
-            let response = {
-                id: parkingLot.id,
-                name: parkingLot.name
-            };
-            return response;
         });
         this.getParkingLotByRegistrationId = (id) => __awaiter(this, void 0, void 0, function* () {
             let parkingLot = yield this.onboardingDal.getParkingLotById(id);

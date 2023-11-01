@@ -7,6 +7,7 @@ const dbHost = process.env.PG_HOST || "localhost"
 const dbPort = process.env.PG_PORT as unknown as number || 5432
 const logging = process.env.PG_LOGGING as unknown as boolean || true
 const environment = process.env.env || "dev"
+const testStorage = environment === "test" ? ":memory:" : null
 
 console.log(`Using environment: ${environment}`)
 
@@ -17,7 +18,8 @@ const sequelizeConnection = new Sequelize({
     database: dbName,
     host: dbHost,
     port: dbPort,
-    logging: console.log,
+    logging: null,
+    //storage: ":memory:" //UnComment for test
 });
 
 export default sequelizeConnection

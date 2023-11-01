@@ -33,7 +33,4 @@ class AllotmentService {
     }
 }
 exports.AllotmentService = AllotmentService;
-function HashMap() {
-    throw new Error("Function not implemented.");
-}
 //# sourceMappingURL=AllotmentService.js.map

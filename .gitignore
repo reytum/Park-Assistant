@@ -2,6 +2,8 @@
 pa-server/node_modules/
 pa-server/.npm
 pa-server/.env
+pa-server/dist/
+pa-server/coverage/
 
 #Flutter
 park_assistance/.android

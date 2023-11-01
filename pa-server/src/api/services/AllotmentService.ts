@@ -2,8 +2,6 @@ import { ApiError } from "../models/errors/ApiError"
 import { SlotCache } from "../../database/SlotCache";
 
 export class AllotmentService {
-
-
     constructor(
         private readonly slotCache: SlotCache
     ) { }
@@ -24,8 +22,4 @@ export class AllotmentService {
         let response = await this.slotCache.releaseSlot(lotId, slotId)
         return response
     }
-}
-
-function HashMap<T, U>(): any {
-    throw new Error("Function not implemented.");
 }

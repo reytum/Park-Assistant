@@ -14,7 +14,6 @@ export class SlotCache {
             let lots = await this.allotmentDal.getParkingLotsByRegistrationId(lotId)
             for (var i = 0; i < lots.length; i++) {
                 this.addSlotToQueue(lotId, lots[i])
-                console.log(`Parking Lots: ${JSON.stringify(lots[i])}`)
             }
         }
     }
@@ -23,10 +22,11 @@ export class SlotCache {
         let slotQueueMap = this.queueMap[lotId]
         if (slotQueueMap != null) {
             for (var i = size; i <= this.MAX_SLOT; i++) {
-                let availableSlot = (slotQueueMap[i] ?? new Queue()).dequeue();
-                if (availableSlot == null) {
+                let queue = slotQueueMap[i] ?? new Queue()
+                if (queue.front === null) {
                     continue;
                 } else {
+                    let availableSlot = queue.dequeue()
                     await this.allotmentDal.updateSlotRemoveVehicleNumber(availableSlot.slotId, "1")
                     return availableSlot;
                 }
@@ -62,5 +62,9 @@ export class SlotCache {
         queue.enqueue(allotment)
         slotMap[allotment.slotSize] = queue
         this.queueMap[lotId] = slotMap
+    }
+
+    clear() {
+        this.queueMap.clear()
     }
 }

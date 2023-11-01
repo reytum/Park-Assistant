@@ -8,6 +8,7 @@ const dbHost = process.env.PG_HOST || "localhost";
 const dbPort = process.env.PG_PORT || 5432;
 const logging = process.env.PG_LOGGING || true;
 const environment = process.env.env || "dev";
+const testStorage = environment === "test" ? ":memory:" : null;
 console.log(`Using environment: ${environment}`);
 const sequelizeConnection = new sequelize_1.Sequelize({
     dialect: "postgres",
@@ -16,7 +17,7 @@ const sequelizeConnection = new sequelize_1.Sequelize({
     database: dbName,
     host: dbHost,
     port: dbPort,
-    logging: console.log,
+    storage: ":memory:"
 });
 exports.default = sequelizeConnection;
 //# sourceMappingURL=config.js.map

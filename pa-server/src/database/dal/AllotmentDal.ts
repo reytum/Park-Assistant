@@ -6,20 +6,6 @@ import Floor from "../entities/Floor"
 
 export class AllotmentDal {
 
-    findFirstEmptySlot = async (lotId: number, size: number): Promise<any> => {
-        //Need to use ORM here, but due to time constraint wrote a query directly
-        let slot = await sequelizeConnection.query(`
-            SELECT ps.id as "slotId", "FloorId" as "floorId", f.name as "floorName", ps.name as "slotName", f.level as "level"
-            FROM "ParkingSlots" ps 
-            JOIN "Floors" f 
-            ON ps."FloorId" = f.id 
-            AND ps."vehicleNumber" IS NULL 
-            WHERE f."ParkingLotId" = ${lotId}
-            AND ps.size >= ${size}
-            ORDER BY ps.size ASC LIMIT 1`)
-        return slot
-    }
-
     updateSlotWithVehicleNumber = async (slotId: number, vehicleNumber: string): Promise<number> => {
         let updated = await ParkingSlot.update({ vehicleNumber: vehicleNumber }, {
             where: { id: slotId }

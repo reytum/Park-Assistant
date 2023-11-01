@@ -6,7 +6,7 @@ interface OnboardingRequest {
     type: string;
     latitude: number;
     longitude: number;
-    countryCode: number;
+    countryCode: string;
     registrationId: string;
     floors: FloorRequest[];
 }

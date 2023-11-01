@@ -5,14 +5,19 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../utils/constants.dart';
 
+LoginProvider loginProvider = LoginProvider(
+    SharedPreferences.getInstance(), LoginRepository(BaseApiProvider()));
+
 class LoginProvider extends ChangeNotifier {
-  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-  final LoginRepository _loginRepository = LoginRepository(BaseApiProvider());
+  LoginProvider(this._prefs, this._loginRepository);
+
+  final Future<SharedPreferences> _prefs;
+  final LoginRepository _loginRepository;
   bool? isLoggedIn;
   int? parkingLotId = -1;
   String errorText = "";
 
-  LoginProvider() {
+  void checkAuth() {
     _prefs.then((value) {
       isLoggedIn = (value.getInt(Constants.parkingLotId) ?? 0) > 0;
       notifyListeners();

@@ -10,7 +10,7 @@ class LoginRepository extends BaseRepository {
   Future<UiResult<ParkingLotResponse>> authenticateParkingLot(
       int parkingLotId) async {
     if (parkingLotId <= 0) {
-      null;
+      return UiResult(null, PaError(message: "parkingLotId cannot be null"));
     }
     final result = await apiProvider.get("$_parkingLotAuthUrl/$parkingLotId");
     if (result?.response?.data != null) {

@@ -10,7 +10,7 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<LoginProvider>(
-        create: (context) => LoginProvider(),
+        create: (context) => loginProvider,
         child: Consumer<LoginProvider>(
           builder: (context, loginProvider, child) => Scaffold(
             body: Column(

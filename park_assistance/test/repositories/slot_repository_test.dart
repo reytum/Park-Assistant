@@ -63,8 +63,15 @@ void main() {
 
   group('releaseSlot', () {
     test("Release slot successfully", () async {
-      when(apiProvider.post("/releaseslot/1/1")).thenAnswer((_) async => null);
+      when(apiProvider.post("/releaseslot/1/1")).thenAnswer((_) async =>
+          ApiResult(
+              Response(
+                  data: {"message": "The slot is released"},
+                  requestOptions: RequestOptions(path: '')),
+              null));
       final result = await slotRepository.releaseSlot(1, 1);
+      assert(result.data != null);
+      expect(result.data?.message, "The slot is released");
     });
   });
 }

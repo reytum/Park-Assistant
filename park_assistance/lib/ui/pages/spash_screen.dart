@@ -9,8 +9,12 @@ class SplashScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      loginProvider.checkAuth();
+    });
+
     return ChangeNotifierProvider<LoginProvider>(
-      create: (context) => LoginProvider(),
+      create: (context) => loginProvider,
       child: Consumer<LoginProvider>(
         builder: (context, themeProvider, child) => MaterialApp(
           theme: ThemeData(

@@ -12,28 +12,28 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AllotmentService = void 0;
 const ApiError_1 = require("../models/errors/ApiError");
 class AllotmentService {
-    constructor(allotmentDal) {
-        this.allotmentDal = allotmentDal;
+    constructor(slotCache) {
+        this.slotCache = slotCache;
         this.allotSlot = (lotId, size) => __awaiter(this, void 0, void 0, function* () {
             try {
-                let slot = yield this.allotmentDal.allotSlot(lotId, size, "1");
+                let slot = this.slotCache.getSlot(lotId, size);
                 if (slot != null) {
                     return slot;
                 }
-                throw new ApiError_1.ApiError(500, "Sorry! All slots are full");
+                throw new ApiError_1.ApiError(404, "Sorry! All slots are full");
             }
             catch (err) {
                 throw err;
             }
         });
         this.releaseSlot = (lotId, slotId) => __awaiter(this, void 0, void 0, function* () {
-            let response = yield this.allotmentDal.updateSlotRemoveVehicleNumber(slotId);
-            if (response > 0) {
-                return { message: "The slot is released" };
-            }
-            return { message: "The slot was not occupied" };
+            let response = yield this.slotCache.releaseSlot(lotId, slotId);
+            return response;
         });
     }
 }
 exports.AllotmentService = AllotmentService;
+function HashMap() {
+    throw new Error("Function not implemented.");
+}
 //# sourceMappingURL=AllotmentService.js.map

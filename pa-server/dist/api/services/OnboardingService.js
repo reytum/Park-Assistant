@@ -13,8 +13,9 @@ exports.OnboardingService = void 0;
 const ObjectMapper_1 = require("../../utils/ObjectMapper");
 const ApiError_1 = require("../models/errors/ApiError");
 class OnboardingService {
-    constructor(onboardingDal) {
+    constructor(onboardingDal, slotCache) {
         this.onboardingDal = onboardingDal;
+        this.slotCache = slotCache;
         this.onboardParkingLot = (obRequest) => __awaiter(this, void 0, void 0, function* () {
             //Normally these queries would be under a single transaction
             //But due to time constraints using brute force here
@@ -34,6 +35,7 @@ class OnboardingService {
         this.getParkingLotByRegistrationId = (id) => __awaiter(this, void 0, void 0, function* () {
             let parkingLot = yield this.onboardingDal.getParkingLotById(id);
             if (parkingLot) {
+                yield this.slotCache.populateCache(parkingLot.id);
                 return parkingLot;
             }
             throw new ApiError_1.ApiError(404, "No Parking lot found by given registrationId");

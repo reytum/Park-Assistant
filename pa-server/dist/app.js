@@ -17,6 +17,8 @@ const OnboardingRoute_1 = require("./api/routes/OnboardingRoute");
 const AllotmentRoute_1 = require("./api/routes/AllotmentRoute");
 const Logger_1 = require("./api/middlewares/Logger");
 const config_1 = __importDefault(require("./database/config"));
+const SlotCache_1 = require("./database/SlotCache");
+const AllotmentDal_1 = require("./database/dal/AllotmentDal");
 //import { AllotmentRoute } from './api/routes/AllotmentRoute'
 const app = (0, express_1.default)();
 const port = 3000;
@@ -30,14 +32,15 @@ app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next();
 });
+let slotCache = new SlotCache_1.SlotCache(new AllotmentDal_1.AllotmentDal());
 app.use('/api', router);
 //router.use('/onboarding', router)
 app.get('/', (req, res) => {
     return res.status(200).send(`Welcome to Park Assistant! \n Endpoints available at http://localhost:${port}/api/v1`);
 });
 app.set('sequelizeClient', config_1.default);
-router.use('/onboarding', new OnboardingRoute_1.OnboardingRoute(router).routes());
-router.use('/', new AllotmentRoute_1.AllotmentRoute(router).routes());
+router.use('/onboarding', new OnboardingRoute_1.OnboardingRoute(router, slotCache).routes());
+router.use('/', new AllotmentRoute_1.AllotmentRoute(router, slotCache).routes());
 const start = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield config_1.default.sync({

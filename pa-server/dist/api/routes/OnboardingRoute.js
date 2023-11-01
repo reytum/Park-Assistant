@@ -6,11 +6,12 @@ const OnboardingValidator_1 = require("../middlewares/validations/OnboardingVali
 const OnboardingService_1 = require("../services/OnboardingService");
 const OnBoardingDal_1 = require("../../database/dal/OnBoardingDal");
 class OnboardingRoute {
-    constructor(router) {
+    constructor(router, slotCache) {
         this.router = router;
+        this.slotCache = slotCache;
         //Normally we should inject these dependencies
         //for simplicity using like this
-        this.onboardingController = new OnboardingController_1.OnboardingController(new OnboardingService_1.OnboardingService(new OnBoardingDal_1.OnBoardingDal));
+        this.onboardingController = new OnboardingController_1.OnboardingController(new OnboardingService_1.OnboardingService(new OnBoardingDal_1.OnBoardingDal, this.slotCache));
         this.onboardingValidator = new OnboardingValidator_1.OnboardingValidator();
     }
     routes() {

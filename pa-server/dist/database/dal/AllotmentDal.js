@@ -13,9 +13,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AllotmentDal = void 0;
+const sequelize_1 = require("sequelize");
 const ApiError_1 = require("../../api/models/errors/ApiError");
 const ParkingSlot_1 = __importDefault(require("../entities/ParkingSlot"));
 const config_1 = __importDefault(require("../config"));
+const Floor_1 = __importDefault(require("../entities/Floor"));
 class AllotmentDal {
     constructor() {
         this.findFirstEmptySlot = (lotId, size) => __awaiter(this, void 0, void 0, function* () {
@@ -76,14 +78,45 @@ class AllotmentDal {
                 throw err;
             }
         });
-        this.updateSlotRemoveVehicleNumber = (slotId) => __awaiter(this, void 0, void 0, function* () {
-            let result = yield ParkingSlot_1.default.update({ vehicleNumber: null }, {
+        this.updateSlotRemoveVehicleNumber = (slotId, vehicleNumber) => __awaiter(this, void 0, void 0, function* () {
+            let result = yield ParkingSlot_1.default.update({ vehicleNumber: vehicleNumber }, {
                 where: { id: slotId },
             });
             if (result.length > 0) {
                 return result[0];
             }
             return -1;
+        });
+        this.releaseSlotVehicleNumber = (slotId) => __awaiter(this, void 0, void 0, function* () {
+            let result = yield ParkingSlot_1.default.update({ vehicleNumber: null }, {
+                where: { id: slotId, vehicleNumber: { [sequelize_1.Op.ne]: null } },
+            });
+            if (result.length > 0) {
+                return result[0];
+            }
+            return -1;
+        });
+        this.getParkingLotsByRegistrationId = (lotId) => __awaiter(this, void 0, void 0, function* () {
+            let res = yield config_1.default.query(`
+            SELECT ps.id as "slotId", "size" as "slotSize", "FloorId" as "floorId", f.name as "floorName", ps.name as "slotName", f.level as "level"
+            FROM "ParkingSlots" ps 
+            JOIN "Floors" f 
+            ON ps."FloorId" = f.id 
+            AND ps."vehicleNumber" IS NULL 
+            WHERE f."ParkingLotId" = ${lotId}
+            ORDER BY ps.size ASC`);
+            if (res.length > 0) {
+                return res[0];
+            }
+            return null;
+        });
+        this.getSlotById = (slotId) => __awaiter(this, void 0, void 0, function* () {
+            return yield ParkingSlot_1.default.findOne({
+                where: { id: slotId },
+                include: [{
+                        model: Floor_1.default
+                    }]
+            });
         });
     }
 }

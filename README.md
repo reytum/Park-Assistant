@@ -347,7 +347,24 @@ Due to time constraint, I have added only few test cases in the app as well as t
 Frameworks Used
 ## Node
 1) jest
-2) faker
+2) ts-mockito
+
+###Run the tests
+To run the tests, we need to enable in-memory database in our sequelizeConnection.
+Open the file ```src/database/config.ts``` and uncomment the below line:
+```
+//storage: ":memory:" //UnComment for test
+```
+Note: This can be done via env variables directly, But had some issues with setting it up.
+
+The run the below command:
+```
+npm run test
+```
+
+Below is the coverage report for the same:
+
+![login](https://github.com/reytum/Park-Assistant/blob/main/images/node-test.png)
 
 ## Flutter
 1) mockito
